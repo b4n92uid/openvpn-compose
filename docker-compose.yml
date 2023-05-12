@@ -1,0 +1,42 @@
+version: "2"
+services:
+  openvpn:
+    cap_add:
+      - NET_ADMIN
+    image: kylemanna/openvpn
+    container_name: openvpn
+    command: ovpn_run --proto udp
+    restart: always
+    volumes:
+      - ./openvpn-data/conf:/etc/openvpn
+    networks:
+      - store_web
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=store_web
+      - traefik.udp.routers.openvpn.entrypoints=vpn
+      - traefik.udp.routers.openvpn.service=openvpn
+      - traefik.udp.services.openvpn.loadBalancer.server.port=1194
+
+  # openvpn_tcp:
+  #   cap_add:
+  #     - NET_ADMIN
+  #   image: kylemanna/openvpn
+  #   container_name: openvpn_tcp
+  #   command: ovpn_run --proto tcp
+  #   restart: always
+  #   volumes:
+  #     - ./openvpn-data/conf:/etc/openvpn
+  #   networks:
+  #     - web
+  #   labels:
+  #     - traefik.enable=true
+  #     - traefik.docker.network=web
+  #     - traefik.tcp.services.openvpn-tcp.loadBalancer.server.port=1194
+  #     # openvpn does not not support SNI, we provide wildcard
+  #     - traefik.tcp.routers.openvpn-tcp.rule=HostSNI(`*`)
+  #     - traefik.tcp.routers.openvpn-tcp.entrypoints=https
+
+networks:
+  store_web:
+    external: true
