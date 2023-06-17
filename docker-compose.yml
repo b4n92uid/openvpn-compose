@@ -10,10 +10,10 @@ services:
     volumes:
       - ./openvpn-data/conf:/etc/openvpn
     networks:
-      - store_web
+      - reverse_proxy
     labels:
       - traefik.enable=true
-      - traefik.docker.network=store_web
+      - traefik.docker.network=reverse_proxy
       - traefik.udp.routers.openvpn.entrypoints=vpn
       - traefik.udp.routers.openvpn.service=openvpn
       - traefik.udp.services.openvpn.loadBalancer.server.port=1194
@@ -31,12 +31,11 @@ services:
   #     - web
   #   labels:
   #     - traefik.enable=true
-  #     - traefik.docker.network=web
-  #     - traefik.tcp.services.openvpn-tcp.loadBalancer.server.port=1194
-  #     # openvpn does not not support SNI, we provide wildcard
+  #     - traefik.docker.network=reverse_proxy
   #     - traefik.tcp.routers.openvpn-tcp.rule=HostSNI(`*`)
   #     - traefik.tcp.routers.openvpn-tcp.entrypoints=https
+  #     - traefik.tcp.services.openvpn-tcp.loadBalancer.server.port=1194
 
 networks:
-  store_web:
+  reverse_proxy:
     external: true
