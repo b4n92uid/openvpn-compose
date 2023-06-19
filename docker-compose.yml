@@ -10,10 +10,10 @@ services:
     volumes:
       - ./openvpn-data/conf:/etc/openvpn
     networks:
-      - reverse_proxy
+      - store_web
     labels:
       - traefik.enable=true
-      - traefik.docker.network=reverse_proxy
+      - traefik.docker.network=store_web
       - traefik.udp.routers.openvpn.entrypoints=vpn
       - traefik.udp.routers.openvpn.service=openvpn
       - traefik.udp.services.openvpn.loadBalancer.server.port=1194
@@ -31,11 +31,11 @@ services:
   #     - web
   #   labels:
   #     - traefik.enable=true
-  #     - traefik.docker.network=reverse_proxy
+  #     - traefik.docker.network=store_web
   #     - traefik.tcp.routers.openvpn-tcp.rule=HostSNI(`*`)
   #     - traefik.tcp.routers.openvpn-tcp.entrypoints=https
   #     - traefik.tcp.services.openvpn-tcp.loadBalancer.server.port=1194
 
 networks:
-  reverse_proxy:
+  store_web:
     external: true
